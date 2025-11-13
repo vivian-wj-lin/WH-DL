@@ -10,7 +10,7 @@ def linear(x):
 
 
 def softmax(x):
-    exp_x = np.exp(x)
+    exp_x = np.exp(x - np.max(x))
     return exp_x / np.sum(exp_x)
 
 
