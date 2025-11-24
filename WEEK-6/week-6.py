@@ -134,24 +134,30 @@ np.random.seed(42)
 df = pd.read_csv("gender-height-weight.csv")
 df["Gender"] = df["Gender"].map({"Male": -1, "Female": 1})
 
-height_mean = df["Height"].mean()
-height_std = df["Height"].std()
-weight_mean = df["Weight"].mean()
-weight_std = df["Weight"].std()
+indices = np.random.permutation(len(df))
+split_idx = int(len(df) * 0.8)
+train_indices = indices[:split_idx]
+test_indices = indices[split_idx:]
 
-df["Height_std"] = (df["Height"] - height_mean) / height_std
-df["Weight_std"] = (df["Weight"] - weight_mean) / weight_std
+df_train = df.iloc[train_indices].copy()
+df_test = df.iloc[test_indices].copy()
 
-xs = df[["Gender", "Height_std"]].values
-es = df["Weight_std"].values.reshape(-1, 1)
+height_mean = df_train["Height"].mean()
+height_std = df_train["Height"].std()
+weight_mean = df_train["Weight"].mean()
+weight_std = df_train["Weight"].std()
 
-indices = np.random.permutation(len(xs))
-xs = xs[indices]
-es = es[indices]
+df_train["Height_std"] = (df_train["Height"] - height_mean) / height_std
+df_train["Weight_std"] = (df_train["Weight"] - weight_mean) / weight_std
 
-split_idx = int(len(xs) * 0.8)
-xs_train, xs_test = xs[:split_idx], xs[split_idx:]
-es_train, es_test = es[:split_idx], es[split_idx:]
+df_test["Height_std"] = (df_test["Height"] - height_mean) / height_std
+df_test["Weight_std"] = (df_test["Weight"] - weight_mean) / weight_std
+
+xs_train = df_train[["Gender", "Height_std"]].values
+es_train = df_train["Weight_std"].values.reshape(-1, 1)
+
+xs_test = df_test[["Gender", "Height_std"]].values
+es_test = df_test["Weight_std"].values.reshape(-1, 1)
 
 loss_fn = MSE()
 learning_rate = 0.01
@@ -201,7 +207,7 @@ print(f"RMSE: {train_rmse:.2f} lbs")
 print(f"Test Set:")
 print(f"RMSE: {test_rmse:.2f} lbs")
 
-# =======================================
+# # =======================================
 print("------ Task 2 ------")
 np.random.seed(42)
 # Survived: 0 = No, 1 = Yes
@@ -211,33 +217,38 @@ df = pd.read_csv("titanic.csv")
 # print(f"Missing Age count: {df['Age'].isna().sum()}")
 df = df.dropna(subset=["Age"])
 
-target = df["Survived"].values
-features = df[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare"]].copy()
-features["Sex"] = features["Sex"].map({"male": 0, "female": 1})
-features_standardized = features.copy()
+df["Sex"] = df["Sex"].map({"male": 0, "female": 1})
 
-age_mean = features["Age"].mean()
-age_std = features["Age"].std()
-fare_mean = features["Fare"].mean()
-fare_std = features["Fare"].std()
+indices = np.random.permutation(len(df))
+split_idx = int(len(df) * 0.8)
+train_indices = indices[:split_idx]
+test_indices = indices[split_idx:]
 
-features_standardized["Age"] = (features["Age"] - age_mean) / age_std
-features_standardized["Fare"] = (features["Fare"] - fare_mean) / fare_std
+df_train = df.iloc[train_indices].copy()
+df_test = df.iloc[test_indices].copy()
 
-xs = features_standardized.values
-es = target.reshape(-1, 1)
+age_mean = df_train["Age"].mean()
+age_std = df_train["Age"].std()
+fare_mean = df_train["Fare"].mean()
+fare_std = df_train["Fare"].std()
 
-indices = np.random.permutation(len(xs))
-xs = xs[indices]
-es = es[indices]
+features_train = df_train[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare"]].copy()
+features_train["Age"] = (features_train["Age"] - age_mean) / age_std
+features_train["Fare"] = (features_train["Fare"] - fare_mean) / fare_std
 
-split_idx = int(len(xs) * 0.8)
-xs_train, xs_test = xs[:split_idx], xs[split_idx:]
-es_train, es_test = es[:split_idx], es[split_idx:]
+xs_train = features_train.values
+es_train = df_train["Survived"].values.reshape(-1, 1)
+
+features_test = df_test[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare"]].copy()
+features_test["Age"] = (features_test["Age"] - age_mean) / age_std
+features_test["Fare"] = (features_test["Fare"] - fare_mean) / fare_std
+
+xs_test = features_test.values
+es_test = df_test["Survived"].values.reshape(-1, 1)
 
 loss_fn = BinaryCrossEntropy()
-learning_rate = 0.004
-epochs = 700
+learning_rate = 0.003
+epochs = 1200
 
 nn = Network(layer_sizes=[6, 16, 8, 1], activations=[relu, relu, sigmoid])
 
