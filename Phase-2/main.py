@@ -1,10 +1,13 @@
 import glob
 import json
 import os
+import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+import jieba
+import jieba.posseg as pseg
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -25,6 +28,9 @@ BOARDS = [
     "stock",
     "Tech_Job",
 ]
+
+DICT_FILE = "dict.txt"
+STOPWORDS = {"嗎", "呀", "啦", "哩", "囉", "嘍", "喔", "吗", "呢", "啊", "哦", "吧"}
 
 
 def load_progress():
@@ -140,11 +146,6 @@ def save_to_csv(data, filename):
 
 def merge_all_csv(input_dir, output_file):
     csv_files = glob.glob(f"{input_dir}/raw_*.csv")
-
-    if not csv_files:
-        print(f"沒有 raw csv")
-        return None
-
     all_dfs = []
     for csv_file in csv_files:
         df = pd.read_csv(csv_file)
@@ -167,8 +168,77 @@ def clean_data(input_file, output_file):
     return df
 
 
+def preprocess_title(title):
+    # remove [xxx]
+    title = re.sub(r"\[.*?\]", "", title)
+    title = title.strip()
+    return title
+
+
+def init_jieba():
+    if os.path.exists(DICT_FILE):
+        jieba.set_dictionary(DICT_FILE)
+
+    custom_dict = "custom_dict.txt"
+    if os.path.exists(custom_dict):
+        jieba.load_userdict(custom_dict)
+
+    return pseg
+
+
+def tokenize_text(text, pseg):
+    words_with_flags = pseg.cut(text)
+    punctuation_pattern = re.compile(
+        r'^[。，、；：！？～…．·「」『』（）《》〈〉【】〔〕""'
+        "﹁﹂—／/\\"
+        r"?.,;:!@#$%^&*()\[\]{}+=_|<>\-]+$"
+    )
+
+    filtered_words = []
+    for word, flag in words_with_flags:
+        word = word.strip()
+        if not word:
+            continue
+        if flag in {"u", "uj", "ul", "p", "c", "e", "zg", "y"}:
+            continue
+        if word in STOPWORDS:
+            continue
+        if punctuation_pattern.match(word):
+            continue
+        filtered_words.append(word)
+
+    return filtered_words
+
+
+def tokenize_dataset(input_file, output_file):
+    pseg = init_jieba()
+    df = pd.read_csv(input_file)
+    total_rows = len(df)
+    tokens_list = []
+
+    for _, row in tqdm(df.iterrows(), total=total_rows, desc="分詞進度", unit="篇"):
+        title = row["title"]
+        cleaned_title = preprocess_title(title)
+        tokens = tokenize_text(cleaned_title, pseg)
+        tokens_str = ",".join(tokens)
+        tokens_list.append(tokens_str)
+
+    df["tokens"] = tokens_list
+    output_df = df[["board", "title", "tokens"]]
+    output_df.to_csv(output_file, index=False, encoding="utf-8-sig")
+    return output_df
+
+
 if __name__ == "__main__":
     os.makedirs(DATA_DIR, exist_ok=True)
-    crawl_all_boards_parallel(BOARDS, max_articles=200000, max_workers=3)
-    merge_all_csv(RAW_DATA_DIR, f"{DATA_DIR}/all_boards_raw.csv")
-    clean_data(f"{DATA_DIR}/all_boards_raw.csv", f"{DATA_DIR}/cleaned_titles.csv")
+
+    # crawl_all_boards_parallel(BOARDS, max_articles=200000, max_workers=3)
+    # merge_all_csv(RAW_DATA_DIR, f"{DATA_DIR}/all_boards_raw.csv")
+    # clean_data(f"{DATA_DIR}/all_boards_raw.csv", f"{DATA_DIR}/cleaned_titles.csv")
+
+    # tokenize_dataset(
+    #     input_file=f"{DATA_DIR}/cleaned_titles.csv",
+    #     output_file=f"{DATA_DIR}/tokenized_titles.csv"
+    # )
+
+    tokenize_dataset(input_file="sample_input.csv", output_file="sample_output.csv")

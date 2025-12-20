@@ -1,0 +1,35 @@
+# Baseball 
+陳晨威 5 nr
+田司恩 5 nr
+佐佐木朗希 5 nr
+羅王維中 5 nr
+嘟福恰勝山 5 nr
+若月健矢 5 nr
+松本剛 5 nr
+林倪安 5 nr
+
+# Boy-Girl 
+另一半 5 n
+
+# c_chat 
+c_chat 5 eng
+
+# hatepolitics
+低能 5 a
+電子煙 5 n
+
+# Lifeismoney 
+三商巧福 5 nt
+mister donut 5 nt
+
+# Military
+
+# pc_shopping
+原價屋 5 nt
+
+# stock 
+
+# Tech_Job
+黃仁勳 5 nr
+經濟學人 5 nt
+
