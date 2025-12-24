@@ -1,5 +1,7 @@
 /Phase-1
 
 /Phase-2/raw_data
-/Phase-2/data
+/Phase-2/data/*
+!/Phase-2/data/tokenized_titles.csv
+/Phase-2/model
 /Phase-2/progress.json
