@@ -375,10 +375,4 @@ if __name__ == "__main__":
     else:
         print(f"Model failed. Second Self-Similarity = {second_self_sim:.3f}")
 
-    # df = load_titles("./tokenized_titles_sample.csv")
-    # tagged_docs = prepare_tagged_documents(df)
-    # model = Doc2Vec.load(f"{MODEL_DIR}/doc2vec_model.bin")
-    # self_sim, second_self_sim, _ = evaluate_model(
-    #     model, tagged_docs, test_size=1000, seed=42
-    # )
-    # print(f"Second Self-Similarity = {second_self_sim:.3f}")
+
