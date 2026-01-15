@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
 DATA_DIR = "data"
-MODEL_DIR = "model"
+MODEL_DIR = "../Deploy/app/model"
 BOARDS = [
     "Baseball",
     "Boy-Girl",
@@ -90,7 +90,7 @@ def predict(model, X, device):
     return predictions
 
 
-def generate_test_sample(df, y, output_file="test_sample.csv", sample_size=5000):
+def generate_test_sample(df, y, output_file="data/test_sample.csv", sample_size=5000):
     _, test_indices = train_test_split(
         np.arange(len(df)), test_size=0.2, random_state=SEED, stratify=y
     )
@@ -101,8 +101,7 @@ def generate_test_sample(df, y, output_file="test_sample.csv", sample_size=5000)
         .apply(
             lambda x: x.sample(
                 n=max(1, int(sample_size * len(x) / len(test_df))), random_state=SEED
-            ),
-            include_groups=False,
+            )
         )
         .sample(frac=1, random_state=SEED)
     )
@@ -253,8 +252,9 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss(weight=class_weights.to(device))
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
 
-    EPOCHS, best_test_acc, best_epoch = 30, 0.0, 0
+    EPOCHS, best_test_acc, best_epoch = 50, 0.0, 0
     epoch_bar = tqdm(range(EPOCHS), desc="Training Progress", unit="epoch")
 
     for epoch in epoch_bar:
@@ -282,6 +282,8 @@ if __name__ == "__main__":
             torch.save(model.state_dict(), f"{MODEL_DIR}/best_classifier.pth")
             epoch_bar.write(f"Epoch {epoch+1}: New best model saved")
 
+        scheduler.step()
+
     epoch_bar.close()
     print(f"\nBest accuracy: {best_test_acc:.4f} (epoch {best_epoch})")
 
@@ -304,7 +306,7 @@ if __name__ == "__main__":
 
     # Test on test_sample.csv
     print("\nTesting test_sample.csv...")
-    sample_df = encode_labels(load_data("test_sample.csv"), board_to_idx)
+    sample_df = encode_labels(load_data("data/test_sample.csv"), board_to_idx)
     X_sample = extract_features(sample_df, doc2vec_model)
     y_pred_sample = predict(model, X_sample, device)
     print(

@@ -1,0 +1,13 @@
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+app/data/*.csv
+
+app/__pycache__/
+**/*.pyc
+**/__pycache__/
+
+.vscode/
+.idea/
+.DS_Store

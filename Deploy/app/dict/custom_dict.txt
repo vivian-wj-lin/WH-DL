@@ -1,0 +1,86 @@
+# Baseball 
+陳晨威 5 nr
+田司恩 5 nr
+佐佐木朗希 5 nr
+羅王維中 5 nr
+嘟福恰勝山 5 nr
+若月健矢 5 nr
+松本剛 5 nr
+林倪安 5 nr
+
+# Boy-Girl 
+另一半 5 n
+
+# c_chat 
+c_chat 5 eng
+
+# hatepolitics
+低能 5 a
+電子煙 5 n
+
+# Lifeismoney 
+三商巧福 5 nt
+mister donut 5 nt
+
+# Military
+
+# pc_shopping
+原價屋 5 nt
+
+# stock 
+元太 5 nt
+焦點股 5 n
+凱基金 5 nt
+新盛力 5 nt
+創鉅先進材料 5 nt
+雙a 5 n
+旺矽 5 nt
+鴻勁 5 nt
+經濟k型 5 n
+力積電 5 nt
+1碼 5 n
+正二 5 n
+中華電信 5 nt
+斐成 5 nt
+萬年清 5 nt
+第一金 5 nt
+軍工股 5 n
+宜新實業 5 nt
+上詮 5 nt
+軟銀 5 nt
+孫正義 5 nr
+同欣電 5 nt
+加密幣 5 n
+大利多 5 n
+順達 5 nt
+泓德能源 5 nt
+國安基金 5 n
+純網銀 5 n
+李永年 5 nr
+基辛格 5 nr
+日東紡 5 nt
+去中化 5 v
+廷鑫 5 nt
+大研生醫 5 nt
+臺慶科 5 nt
+楊立昆 5 nr
+聯儲局 5 nt
+三商壽 5 nt
+k型經濟 5 n
+高股息 5 n
+炒幣 5 v
+李成鋼 5 nr
+內捲 5 v
+哈瑪斯 5 nt
+昇貿 5 nt
+美琪瑪 5 nt
+彭金隆 5 nr
+三箭 5 n
+昇騰 5 nt
+新青安 5 n
+
+
+# Tech_Job
+黃仁勳 5 nr
+經濟學人 5 nt
+

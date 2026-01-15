@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡迎使用短文本分類預測</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>歡迎使用短文本分類預測</h1>
+        </header>
+
+        <div class="prediction-form">
+            <h2>輸入一篇文章的標題</h2>
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="titleInput" 
+                    autocomplete="off"
+                    maxlength="100"
+                    placeholder="最多 100 字"
+                >
+                <button id="predictBtn" onclick="predictTitle()">預測分類</button>
+            </div>
+            <div class="char-count">
+                <span id="charCount">0</span> / 100
+            </div>
+        </div>
+
+        <div id="resultBlock" class="result-block hidden">
+            <div class="result-line">
+                <span>預測結果：</span>
+                <span id="resultText"></span>
+            </div>
+
+            <div class="feedback-section">
+                <p class="feedback-hint">選擇您認為正確的分類：</p>
+                <div id="boardButtons" class="board-buttons">
+                </div>
+                <p id="feedbackMessage" class="feedback-message hidden"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+    <script>
+        const BOARDS = {{ boards | tojson }};
+        const BOARD_DISPLAY_NAMES = {{ board_display_names | tojson }};
+    </script>
+</body>
+</html>

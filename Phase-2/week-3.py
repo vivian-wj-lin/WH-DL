@@ -20,7 +20,7 @@ progress_lock = threading.Lock()
 PROGRESS_FILE = "progress.json"
 RAW_DATA_DIR = "raw_data"
 DATA_DIR = "data"
-MODEL_DIR = "model"
+MODEL_DIR = "../Deploy/app/model"
 BOARDS = [
     "Baseball",
     "Boy-Girl",
@@ -33,7 +33,7 @@ BOARDS = [
     "Tech_Job",
 ]
 
-DICT_FILE = "dict.txt"
+DICT_FILE = "../Deploy/app/dict/dict.txt"
 STOPWORDS = {"嗎", "呀", "啦", "哩", "囉", "嘍", "喔", "吗", "呢", "啊", "哦", "吧"}
 
 
@@ -183,7 +183,7 @@ def init_jieba():
     if os.path.exists(DICT_FILE):
         jieba.set_dictionary(DICT_FILE)
 
-    custom_dict = "custom_dict.txt"
+    custom_dict = "../Deploy/app/dict/custom_dict.txt"
     if os.path.exists(custom_dict):
         jieba.load_userdict(custom_dict)
 
@@ -353,26 +353,5 @@ if __name__ == "__main__":
     if second_self_sim >= 0.80:
         save_model(model, "doc2vec_model.bin")
         print(f"Model passed. Second Self-Similarity = {second_self_sim:.3f}")
-
-        sample_data = []
-        for doc in test_sample:
-            doc_id = int(doc.tags[0])
-            original_row = df.loc[doc_id]
-            sample_data.append(
-                {
-                    "doc_id": doc_id,
-                    "board": original_row["board"],
-                    "title": original_row["title"],
-                    "tokens": original_row["tokens"],
-                }
-            )
-
-        sample_df = pd.DataFrame(sample_data)
-        sample_df.to_csv(
-            "./tokenized_titles_sample.csv", index=False, encoding="utf-8-sig"
-        )
-        print(f"Sample saved: ./tokenized_titles_sample.csv")
     else:
         print(f"Model failed. Second Self-Similarity = {second_self_sim:.3f}")
-
-
