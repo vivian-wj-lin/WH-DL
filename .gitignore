@@ -5,3 +5,6 @@
 /Phase-2/progress.json
 
 /Deploy/app/model
+
+/Phase-3_CNN/data/
+/Phase-3_CNN/*.pth
