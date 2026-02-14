@@ -8,3 +8,6 @@
 
 /Phase-3_CNN/data/
 /Phase-3_CNN/*.pth
+
+Phase-3_RCNN/vehicles-data
+Phase-3_RCNN/**/*.pth
